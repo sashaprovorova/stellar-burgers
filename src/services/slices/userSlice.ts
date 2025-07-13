@@ -1,4 +1,8 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createAsyncThunk,
+  SerializedError
+} from '@reduxjs/toolkit';
 import {
   loginUserApi,
   getUserApi,
@@ -6,43 +10,37 @@ import {
   registerUserApi,
   forgotPasswordApi,
   resetPasswordApi,
-  updateUserApi
+  updateUserApi,
+  TRegisterData
 } from '@api';
 import { clearTokens, storeTokens } from '../../utils/token';
+import { TUser } from '@utils-types';
+import { setCookie } from '../../utils/cookie';
 
 interface userState {
-  user: null | { name: string; email: string };
+  user: TUser | null;
   isLoading: boolean;
   isAuthChecked: boolean;
-  registerError: string | null;
-  loginError: string | null;
+  error: SerializedError | null;
 }
 
 const initialState: userState = {
   user: null,
   isLoading: false,
   isAuthChecked: false,
-  registerError: null,
-  loginError: null
+  error: null
 };
 
 export const registerUserThunk = createAsyncThunk(
   'user/register',
-  async (
-    {
-      name,
-      email,
-      password
-    }: { name: string; email: string; password: string },
-    thunkAPI
-  ) => {
+  async (userRegistrationData: TRegisterData, { rejectWithValue }) => {
     try {
-      const response = await registerUserApi({ name, email, password });
-      const { user, accessToken, refreshToken } = response;
-      storeTokens(refreshToken, accessToken);
-      return user;
+      const response = await registerUserApi(userRegistrationData);
+      localStorage.setItem('refreshToken', response.refreshToken);
+      setCookie('accessToken', response.accessToken);
+      return response.user;
     } catch (err: any) {
-      return thunkAPI.rejectWithValue(err.message);
+      return rejectWithValue(err.message);
     }
   }
 );
@@ -143,10 +141,12 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload;
         state.isAuthChecked = true;
+        state.error = null;
       })
-      .addCase(registerUserThunk.rejected, (state) => {
+      .addCase(registerUserThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.isAuthChecked = true;
+        state.error = action.error;
       })
       .addCase(loginUserThunk.pending, (state) => {
         state.isLoading = true;
@@ -155,16 +155,16 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload;
         state.isAuthChecked = true;
+        state.error = null;
       })
       .addCase(loginUserThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.isAuthChecked = true;
-        state.registerError =
-          (action.payload as string) || 'Ошибка регистрации';
+        state.error = action.error;
       })
       .addCase(checkUserAuthThunk.pending, (state) => {
         state.isLoading = true;
-        state.registerError = null;
+        state.error = null;
       })
       .addCase(checkUserAuthThunk.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -182,9 +182,17 @@ const userSlice = createSlice({
           state.user.email = action.payload.email;
         }
       })
+      .addCase(logoutUserThunk.pending, (state) => {
+        state.isLoading = true;
+      })
       .addCase(logoutUserThunk.fulfilled, (state) => {
         state.user = null;
-        state.isAuthChecked = false;
+        state.isAuthChecked = true;
+        state.isLoading = false;
+      })
+      .addCase(logoutUserThunk.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error;
       });
   }
 });

@@ -5,7 +5,7 @@ import {
   useDispatch,
   useSelector
 } from '../../services/store/store';
-import { loginUserThunk } from '../../features/user/userSlice';
+import { loginUserThunk } from '../../services/slices/userSlice';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 export const Login: FC = () => {
@@ -17,17 +17,20 @@ export const Login: FC = () => {
   const [password, setPassword] = useState('');
 
   const { from } = location.state || { from: { pathname: '/' } };
-  const loginError = useSelector((state) => state.user.loginError);
+  const loginError = useSelector((state) => state.user.error);
 
-  const handleSubmit = async (e: SyntheticEvent) => {
+  const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    await dispatch(loginUserThunk({ email, password })).unwrap();
-    navigate(from.pathname, { replace: true });
+    dispatch(loginUserThunk({ email, password }))
+      .unwrap()
+      .then(() => {
+        navigate(from.pathname, { replace: true });
+      });
   };
 
   return (
     <LoginUI
-      errorText={loginError || ''}
+      errorText={loginError?.message}
       email={email}
       setEmail={setEmail}
       password={password}

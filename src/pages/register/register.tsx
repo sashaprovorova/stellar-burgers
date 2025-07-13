@@ -5,13 +5,13 @@ import {
   useDispatch,
   useSelector
 } from '../../services/store/store';
-import { registerUserThunk } from '../../features/user/userSlice';
+import { registerUserThunk } from '../../services/slices/userSlice';
 import { useNavigate } from 'react-router-dom';
 
 export const Register: FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
-  const registerError = useSelector((state) => state.user.registerError);
+  const registerError = useSelector((state) => state.user.error);
 
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
@@ -19,17 +19,16 @@ export const Register: FC = () => {
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    try {
-      await dispatch(
-        registerUserThunk({ name: userName, email, password })
-      ).unwrap();
-      navigate('/profile', { replace: true });
-    } catch (error: any) {}
+    dispatch(registerUserThunk({ name: userName, email, password }))
+      .unwrap()
+      .then(() => {
+        navigate('/profile', { replace: true });
+      });
   };
 
   return (
     <RegisterUI
-      errorText={registerError || ''}
+      errorText={registerError?.message}
       email={email}
       userName={userName}
       password={password}
