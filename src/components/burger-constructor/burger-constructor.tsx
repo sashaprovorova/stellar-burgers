@@ -11,6 +11,7 @@ import {
   clearSelectedOrder,
   createOrderThunk
 } from '../../services/slices/orderSlice';
+import { resetIngredient } from '../../services/slices/builderSlice';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
@@ -18,14 +19,14 @@ export const BurgerConstructor: FC = () => {
 
   const constructorItems = useSelector((state) => state.builder);
 
-  const { isAuthChecked } = useSelector((state) => state.user);
+  const { isAuthenticated } = useSelector((state) => state.user);
 
   const { isLoading: orderRequest, selectedOrder: orderModalData } =
     useSelector((state) => state.orders);
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
-    if (!isAuthChecked) {
+    if (!isAuthenticated) {
       return navigate('/login');
     }
     const data = [
@@ -38,6 +39,7 @@ export const BurgerConstructor: FC = () => {
 
   const closeOrderModal = () => {
     dispatch(clearSelectedOrder());
+    dispatch(resetIngredient());
   };
 
   const price = useMemo(

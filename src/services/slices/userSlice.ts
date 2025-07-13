@@ -21,6 +21,7 @@ interface userState {
   user: TUser | null;
   isLoading: boolean;
   isAuthChecked: boolean;
+  isAuthenticated: boolean;
   error: SerializedError | null;
 }
 
@@ -28,6 +29,7 @@ const initialState: userState = {
   user: null,
   isLoading: false,
   isAuthChecked: false,
+  isAuthenticated: false,
   error: null
 };
 
@@ -141,12 +143,14 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload;
         state.isAuthChecked = true;
+        state.isAuthenticated = true;
         state.error = null;
       })
       .addCase(registerUserThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.isAuthChecked = true;
         state.error = action.error;
+        state.isAuthenticated = false;
       })
       .addCase(loginUserThunk.pending, (state) => {
         state.isLoading = true;
@@ -155,12 +159,14 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload;
         state.isAuthChecked = true;
+        state.isAuthenticated = true;
         state.error = null;
       })
       .addCase(loginUserThunk.rejected, (state, action) => {
         state.isLoading = false;
         state.isAuthChecked = true;
         state.error = action.error;
+        state.isAuthenticated = false;
       })
       .addCase(checkUserAuthThunk.pending, (state) => {
         state.isLoading = true;
@@ -170,11 +176,13 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.user = action.payload;
         state.isAuthChecked = true;
+        state.isAuthenticated = true;
       })
       .addCase(checkUserAuthThunk.rejected, (state) => {
         state.user = null;
         state.isLoading = false;
         state.isAuthChecked = true;
+        state.isAuthenticated = false;
       })
       .addCase(updateUserThunk.fulfilled, (state, action) => {
         if (state.user) {
@@ -189,6 +197,7 @@ const userSlice = createSlice({
         state.user = null;
         state.isAuthChecked = true;
         state.isLoading = false;
+        state.isAuthenticated = false;
       })
       .addCase(logoutUserThunk.rejected, (state, action) => {
         state.isLoading = false;
