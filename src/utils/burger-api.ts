@@ -157,6 +157,8 @@ export const registerUserApi = (data: TRegisterData) =>
       return Promise.reject(data);
     });
 
+console.log(`${URL}/auth/register`);
+
 export type TLoginData = {
   email: string;
   password: string;
