@@ -5,7 +5,7 @@ import {
   useDispatch,
   useSelector
 } from '../../services/store/store';
-import { loginUserThunk } from '../../services/slices/userSlice';
+import { loginUserThunk } from '@slices';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 export const Login: FC = () => {

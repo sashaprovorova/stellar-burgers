@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "name": "ORDER_CY_TEST",
+  "order": {
+    "_id": "74c9f84e4e6f29401c123agc",
+    "status": "done",
+    "name": "Space флюоресцентный фалленианский бургер",
+    "createdAt": "2025-08-01",
+    "updatedAt": "2025-08-02",
+    "number": 77,
+    "ingredients": [
+      "74k9f54e4e6f55401c123afc",
+      "44k9f54e9f6f55401c123afc",
+      "34k9f54e4e6f5fh01c1p3afc"
+    ]
+  }
+}

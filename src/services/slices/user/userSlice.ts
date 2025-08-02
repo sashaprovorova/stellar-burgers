@@ -13,9 +13,9 @@ import {
   updateUserApi,
   TRegisterData
 } from '@api';
-import { clearTokens, storeTokens } from '../../utils/token';
+import { clearTokens, storeTokens } from '../../../utils/token';
 import { TUser } from '@utils-types';
-import { setCookie } from '../../utils/cookie';
+import { setCookie } from '../../../utils/cookie';
 
 interface userState {
   user: TUser | null;
@@ -25,7 +25,7 @@ interface userState {
   error: SerializedError | null;
 }
 
-const initialState: userState = {
+export const initialState: userState = {
   user: null,
   isLoading: false,
   isAuthChecked: false,
@@ -130,7 +130,7 @@ export const logoutUserThunk = createAsyncThunk(
   }
 );
 
-const userSlice = createSlice({
+export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {},

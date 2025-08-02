@@ -12,7 +12,7 @@ type TFeedsState = {
   error: SerializedError | null;
 };
 
-const initialState: TFeedsState = {
+export const initialState: TFeedsState = {
   isLoading: false,
   data: {
     orders: [],
