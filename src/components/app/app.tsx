@@ -18,10 +18,10 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { ProtectedRoute } from '../protected-route/protected-route';
 import { useDispatch } from '../../services/store/store';
-import { checkUserAuthThunk } from '../../services/slices/userSlice';
-import { fetchIngredientsThunk } from '../../services/slices/ingredientsSlice';
+import { checkUserAuthThunk } from '../../services/slices/user/userSlice';
+import { fetchIngredientsThunk } from '../../services/slices/ingredients/ingredientsSlice';
 import { ProfileLayout } from '../profile-layout/profile-layout';
-import { clearSelectedOrder } from '../../services/slices/orderSlice';
+import { clearSelectedOrder } from '../../services/slices/orders/orderSlice';
 
 const App = () => {
   const dispatch = useDispatch();

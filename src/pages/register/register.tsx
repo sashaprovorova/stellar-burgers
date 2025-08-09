@@ -5,7 +5,7 @@ import {
   useDispatch,
   useSelector
 } from '../../services/store/store';
-import { registerUserThunk } from '../../services/slices/userSlice';
+import { registerUserThunk } from '@slices';
 import { useNavigate } from 'react-router-dom';
 
 export const Register: FC = () => {

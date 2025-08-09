@@ -7,11 +7,7 @@ import {
   useDispatch,
   useSelector
 } from '../../services/store/store';
-import {
-  clearSelectedOrder,
-  createOrderThunk
-} from '../../services/slices/orderSlice';
-import { resetIngredient } from '../../services/slices/builderSlice';
+import { clearSelectedOrder, createOrderThunk, resetIngredient } from '@slices';
 
 export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
